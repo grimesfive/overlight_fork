@@ -51,8 +51,6 @@ void initialize_OL_Cheats()
 	OLCheats->ChamsTypeInFrontWall = D3DFILL_SOLID;
 
 	OLCheats->fSlowValue = 350;
-
-	OLCheats->bOL_Update = true;
 }
 
 uint16_t GetAimingBot()

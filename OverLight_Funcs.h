@@ -136,8 +136,6 @@ struct stOL_Cheats
 
 	int iStickID;
 
-	bool bOL_Update;
-
 	bool bFontLoaded;
 
 	bool bAntiLoading;
