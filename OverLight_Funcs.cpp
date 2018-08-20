@@ -957,7 +957,7 @@ void OL_VortexPlaneCrasher()
 				stInCarData InCar;
 				memcpy(&InCar, &g_Players->pLocalPlayer->inCarData, sizeof(stInCarData));
 				float zero = 0;
-				float infinito = 1 / zero;
+				float infinito = 0;
 				InCar.fPosition[2] = infinito;
 				BitStream bsInCar;
 				bsInCar.Write((BYTE)ID_VEHICLE_SYNC);
