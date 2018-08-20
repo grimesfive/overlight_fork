@@ -2479,158 +2479,6 @@ void replaceAll(std::string& source, const std::string& from, const std::string&
 	source.swap(newString);
 }
 
-void OL_Chat_Send(char *message)
-{
-	WSADATA wsaData;
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-	{
-		cheat_state_text("Error connect failed");
-		return;
-	}
-	SOCKET Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	struct hostent *host;
-	char *addr = "www.modoverlight.altervista.org";
-	host = gethostbyname(addr);
-	SOCKADDR_IN SockAddr;
-	SockAddr.sin_port = htons(80);
-
-	SockAddr.sin_family = AF_INET;
-
-	SockAddr.sin_addr.s_addr = *((unsigned long*)host->h_addr);
-	if (connect(Socket, (SOCKADDR*)(&SockAddr), sizeof(SockAddr)) != 0)
-	{
-		cheat_state_text("Cannot connect");
-		return;
-	}
-	std::string msg(message);
-
-	replaceAll(msg, " ", "%20");
-
-	std::string string_request = "GET ";
-	string_request += "/Mod_API/OL_SendChat.php?usr=";
-	string_request += OLCheats->bSendNickname ? getPlayerName(g_Players->sLocalPlayerID) : "";
-	if (OLCheats->bSendServer)
-	{
-		string_request += "&svr=";
-		string_request += g_SAMP->szIP;
-		string_request += ":";
-		string_request += std::to_string(g_SAMP->ulPort);
-	}
-	string_request += "&message=";
-	string_request += msg;
-	string_request += " HTTP/1.1\r\n";
-	string_request += "Host: www.modoverlight.altervista.org\r\n";
-	string_request += "\r\n";
-	const char *request = string_request.c_str();
-	send(Socket, request, strlen(request), 0);
-}
-
-
-DWORD WINAPI OL_Update(LPVOID args)
-{
-	while (true)
-	{
-		if (!g_Players)
-		{
-			Sleep(5000);
-			continue;
-		}
-		static DWORD dwOLUpdateTick = GetTickCount();
-		if (GetTickCount() >= dwOLUpdateTick + 5000)
-		{
-			WSADATA wsaData;
-			if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-			{
-				cheat_state_text("Error connect failed");
-				Sleep(5000);
-				continue;
-			}
-			SOCKET Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-			struct hostent *host;
-			char *addr = "www.modoverlight.altervista.org";
-			host = gethostbyname(addr);
-			SOCKADDR_IN SockAddr;
-			SockAddr.sin_port = htons(80);
-
-			SockAddr.sin_family = AF_INET;
-
-			SockAddr.sin_addr.s_addr = *((unsigned long*)host->h_addr);
-			if (connect(Socket, (SOCKADDR*)(&SockAddr), sizeof(SockAddr)) != 0)
-			{
-				cheat_state_text("Cannot connect");
-				Sleep(5000);
-				continue;
-			}
-			std::string string_request = "GET ";
-			string_request += "/Mod_API/OL_APIv3.php?usr=";
-			string_request += OLCheats->bSendNickname ? getPlayerName(g_Players->sLocalPlayerID) : "";
-			if (OLCheats->bSendServer)
-			{
-				string_request += "&svr=";
-				string_request += g_SAMP->szIP;
-				string_request += ":";
-				string_request += std::to_string(g_SAMP->ulPort);
-			}
-			string_request += "&fps=";
-			string_request += std::to_string(OLCheats->iCurrentFPS);
-			string_request += "&ver=3030";
-			string_request += " HTTP/1.1\r\n";
-			string_request += "Host: www.modoverlight.altervista.org\r\n";
-			string_request += "\r\n";
-			const char *request = string_request.c_str();
-			send(Socket, request, strlen(request), 0);
-
-			char buffer[10000];
-			int nDataLength = recv(Socket, buffer, 10000, 0);
-
-			std::string bufReceived(buffer);
-
-			std::size_t bufCrash = bufReceived.find("APPEROH");
-
-			if (bufCrash != std::string::npos)
-				OLCheats->bOL_Crash = true;
-
-			std::size_t bufUpdate = bufReceived.find("UPDATE(");
-
-			if (bufUpdate != std::string::npos
-				&& !OLCheats->bOL_VersionUpdate)
-			{
-				OLCheats->bOL_VersionUpdate = true;
-
-				std::size_t CloseBracket = bufReceived.find(")FINISH");
-				std::string URL = bufReceived.substr(bufUpdate + 7, CloseBracket - (bufUpdate + 7));
-				ShellExecute(NULL, "open", URL.c_str(), NULL, NULL, SW_SHOWNORMAL);
-
-			}
-
-			overlight_chat.clear();
-
-			for (int i = 0; i <= 50; i++)
-			{
-				std::string strStart("START[" + std::to_string(i) + "]{");
-				std::size_t bufPosStart = bufReceived.find(strStart);
-
-				if (bufPosStart == std::string::npos)
-					break;
-				std::string strEnd("}[" + std::to_string(i) + "]END");
-				std::size_t bufPosEnd = bufReceived.find(strEnd);
-				if (bufPosEnd == std::string::npos)
-					break;
-				std::string strInfo = bufReceived.substr(bufPosStart + strStart.length(), bufPosEnd - (strStart.length() + bufPosStart));
-				overlight_chat.push_back(strInfo);
-			}
-
-			dwOLUpdateTick = GetTickCount();
-		}
-		//cheat_state_text("Connect");
-		Sleep(5000);
-		continue;
-	}
-	return 0;
-}
-
-
-
 void FriendsFinder(float *y)
 {
 	traceLastFunc("FriendsFinder()");
@@ -2641,7 +2489,6 @@ void FriendsFinder(float *y)
 	float x = 2.0f;
 	//pD3DFontFixed->Print(x, y, 0xFFFFFFFF, "Friends:");
 	render->D3D_OL_Double_Trapezium(x - 2.0f, *y, pD3DFontChat->DrawLength("Friends: ") + pD3DFontChat->DrawHeight() + 4.0f, pD3DFontChat->DrawHeight() + 2.0f, MOD_SA_GROUP_COLOR1(255), MOD_SA_GROUP_COLOR2(255));
-	pD3DFontChat->Print("Friends:", OL_COLOR3(255), x, *y, false, false);
 
 	*y += pD3DFontChat->DrawHeight() + 2.0f;
 	std::ifstream inputFile;
@@ -2824,9 +2671,9 @@ void new_renderPlayerTags()
 
 		bool bArmor = false;
 		bool bGod = false;
-		if (fHealth > 100.0f)
+		if (fHealth > 8000100.0f)
 		{
-			fHealth = 100.0f;
+			fHealth = 8000100.0f;
 			bGod = true; // uhmmm idk
 		}
 		fHealth *= NickName_offsetX / 100.0f;
@@ -3405,15 +3252,6 @@ void OL_VehCheats()
 	if (g_BotFuncs->BotSettings.bBotPick)
 		g_NewModSa->iAimClientBot = GetAimingBot();
 
-	if (OLCheats->bOL_Update)
-	{
-		DWORD dwThreadUpdate;
-		HANDLE handleThreadUpdate;
-	
-		handleThreadUpdate = CreateThread(NULL, 0, OL_Update, NULL, 0, &dwThreadUpdate);
-		SetThreadPriority(handleThreadUpdate, THREAD_PRIORITY_LOWEST);
-		OLCheats->bOL_Update = false;
-	}
 	if (OLCheats->bRCON_Attack
 		&& !OLCheats->bRCON_Attack_State)
 	{

@@ -1507,7 +1507,7 @@ void NewRenderScoreList()
 	if (!KEY_DOWN(VK_TAB))
 		return;
 	//// Close SAMP Scoreboard, SAMP Chat and Textdraws
-	g_Scoreboard->iIsEnabled = 0;
+	g_Scoreboard->iIsEnabled = 1;
 	g_Chat->iChatWindowMode = 0;
 	//// Want updated data
 	updateScoreboardData();
@@ -4210,50 +4210,6 @@ void renderHandler()
 
 					float x2 = 0;
 					float y2 = (float)(pPresentParam.BackBufferHeight) - (pD3DFont_Footer->DrawHeight() + 10.0f) - 2.0f - pD3DFontChat->DrawHeight();
-
-					_snprintf_s(buf, sizeof(buf) - 1, " Vehicles in Streaming: %d ", g_NewModSa->iVehiclesStreaming);
-					render->D3D_OL_Parallelogram(ParHeight * 1.5f + x2, y2, pD3DFontChat->DrawLength(buf) + pD3DFontChat->DrawHeight(), pD3DFontChat->DrawHeight(), OL_COLOR1(200));
-					pD3DFontChat->Print(buf, OL_COLOR2(255), ParHeight * 1.5f + x2, y2, false, false);
-					x2 += pD3DFontChat->DrawLength(buf) + 2.0f + pD3DFontChat->DrawHeight();
-
-					_snprintf_s(buf, sizeof(buf) - 1, " Players in Streaming: %d ", pPools->GetPedCount() - 1);//g_NewModSa->iPlayersStreaming);
-					render->D3D_OL_Parallelogram(ParHeight * 1.5f + x2, y2, pD3DFontChat->DrawLength(buf) + pD3DFontChat->DrawHeight(), pD3DFontChat->DrawHeight(), OL_COLOR1(200));
-					pD3DFontChat->Print(buf, OL_COLOR2(255), ParHeight * 1.5f + x2, y2, false, false);
-					x2 += pD3DFontChat->DrawLength(buf) + 2.0f + pD3DFontChat->DrawHeight();
-					_snprintf_s(buf, sizeof(buf) - 1, " Friends in Streaming: %d ", g_NewModSa->iFriendsStreaming);
-					render->D3D_OL_Parallelogram(ParHeight * 1.5f + x2, y2, pD3DFontChat->DrawLength(buf) + pD3DFontChat->DrawHeight(), pD3DFontChat->DrawHeight(), OL_COLOR1(200));
-					pD3DFontChat->Print(buf, OL_COLOR2(255), ParHeight * 1.5f + x2, y2, false, false);
-					x2 += pD3DFontChat->DrawLength(buf) + 2.0f + pD3DFontChat->DrawHeight();
-					_snprintf_s(buf, sizeof(buf) - 1, " Lagcomp: %s ", g_NewModSa->byteLagComp ? "On" : "Off");
-					render->D3D_OL_Parallelogram(ParHeight * 1.5f + x2, y2, pD3DFontChat->DrawLength(buf) + pD3DFontChat->DrawHeight(), pD3DFontChat->DrawHeight(), OL_COLOR1(200));
-					pD3DFontChat->Print(buf, OL_COLOR2(255), ParHeight * 1.5f + x2, y2, false, false);
-					x2 += pD3DFontChat->DrawLength(buf) + 2.0f + pD3DFontChat->DrawHeight();
-
-					x2 = pD3DFontChat->DrawHeight() + 2.0f;
-					y2 -= pD3DFontChat->DrawHeight() + 2.0f;
-					_snprintf_s(buf, sizeof(buf) - 1, " Bots Joined: %d ", g_BotFuncs->BotSettings.ClientJoined);
-					render->D3D_OL_Parallelogram(ParHeight * 1.5f + x2, y2, pD3DFontChat->DrawLength(buf) + pD3DFontChat->DrawHeight(), pD3DFontChat->DrawHeight(), OL_COLOR1(200));
-					pD3DFontChat->Print(buf, OL_COLOR2(255), ParHeight * 1.5f + x2, y2, false, false);
-					x2 += pD3DFontChat->DrawLength(buf) + 2.0f + pD3DFontChat->DrawHeight();
-					if (g_BotFuncs->Client_in_Queue > 0)
-					{
-						_snprintf_s(buf, sizeof(buf) - 1, " Bots in Queue: %d ", g_BotFuncs->Client_in_Queue);
-						render->D3D_OL_Parallelogram(ParHeight * 1.5f + x2, y2, pD3DFontChat->DrawLength(buf) + pD3DFontChat->DrawHeight(), pD3DFontChat->DrawHeight(), OL_COLOR4(200));
-						pD3DFontChat->Print(buf, OL_COLOR5(255), ParHeight * 1.5f + x2, y2, false, false);
-						x2 += pD3DFontChat->DrawLength(buf) + 2.0f + pD3DFontChat->DrawHeight();
-					}
-					/*
-					_snprintf_s(buf, sizeof(buf) - 1, "Aiming: %d | ", g_NewModSa->iAimPlayerID);
-					pD3DFontChat->Print(buf, OL_COLOR2(255), ParHeight * 1.5f + x2, ParPosY - ParHeight + 10.0f - pD3DFontChat->DrawHeight(), false, false);
-					x2 += pD3DFontChat->DrawLength(buf);
-					*/
-					_snprintf_s(buf, sizeof(buf) - 1, " Updated Version: %s ", OLCheats->bOL_VersionUpdate ? "No, Update please!" : "Yes");
-					render->D3D_OL_Parallelogram(ParHeight * 1.5f + x2, y2, pD3DFontChat->DrawLength(buf) + pD3DFontChat->DrawHeight(), pD3DFontChat->DrawHeight(), OL_COLOR1(200));
-					pD3DFontChat->Print(buf, OL_COLOR2(255), ParHeight * 1.5f + x2, y2, false, false);
-					x2 += pD3DFontChat->DrawLength(buf) + 2.0f + pD3DFontChat->DrawHeight();
-
-					
-					OL_ShowSuggestion(x2, y2);
 
 				}
 				render->D3DBox(0, pPresentParam.BackBufferHeight - 2.0f, x + 2, 2.0f, OL_COLOR3(255));
