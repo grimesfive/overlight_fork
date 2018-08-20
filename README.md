@@ -7,3 +7,5 @@ Credits:
 - Enacostione
 - Krakazabra
 - s0beit developers; NotAPlane, jflm, nuckfuts, FYP, NarutoUA, s0beit, Wang, Trix, Static, cBonky, REALfreaky, v0gelz, CrazyT, wax, cereal, jac0b, playa', North, caytchen, DeN00b, Offroader23, Kosty@n, gaffkanone, Racer_S
+
+If anyone from developers wants this to removed, contact me using Discord: dpr#3932
