@@ -986,10 +986,6 @@ void sampPatchDisableAnticheat(void)
 	patcher_install(&fuckAC);
 }
 
-void autocbug2()
-{
-}
-
 uint16_t	anticarjacked_vehid;
 DWORD		anticarjacked_ebx_backup;
 DWORD		anticarjacked_jmp;
