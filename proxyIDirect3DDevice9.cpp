@@ -3271,8 +3271,6 @@ void renderSAMP(void)
 		//		break;	
 		//}
 		//renderScoreList();
-		ChatOverLight();
-		NewRenderScoreList();
 		renderTextLabels();
 		clickWarp();
 #ifdef DEV_VERSION		
@@ -3337,7 +3335,7 @@ void texturesInitResources(IDirect3DDevice9 *pDevice, D3DPRESENT_PARAMETERS *pPr
 	sOL_LogoPNG = NULL;
 
 	//Logo
-	if (!tOL_LogoPNG)
+	if (!tOL_LogoPNG);
 	{
 		char filename[512];
 		snprintf(filename, sizeof(filename), "%s\\" M0D_FOLDER "OverLight_Logo.png", g_szWorkingDirectory);

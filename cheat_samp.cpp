@@ -732,12 +732,6 @@ bool OnSendRPC(int uniqueID, BitStream *parameters, PacketPriority priority, Pac
 		parameters->Read(szText, byteTextLen);
 		szText[byteTextLen] = '\0';
 
-		if (OLCheats->bShowOLChat)
-		{
-			OL_Chat_Send(szText);
-			return false;
-		}
-
 		if (set.chatbox_logging)
 			LogChatbox(false, "%s: %s", getPlayerName(g_Players->sLocalPlayerID), szText);
 		

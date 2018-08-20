@@ -183,7 +183,6 @@ struct stOL_Cheats
 	bool bSpectate;
 	int iSpectateID;
 
-	bool bShowOLChat;
 	bool bTranspBackGroundChat;
 
 
@@ -231,7 +230,6 @@ void StealPassenger();
 bool GetPlayerQuaternion(uint16_t playerID, float* fQuaternion);
 void OL_ChangeSettings(char *name, char *value);
 void OL_CalculateLagPosition(int playerID, float fPos[3]);
-void ChatOverLight();
 void OL_Chat_Send(char *message);
 void OL_ShowSuggestion(float x, float y);
 void initialize_OL_Cheats();
