@@ -3388,8 +3388,8 @@ void menu_maybe_init ( void )
 	menu_item_add(OverLight_CarFunctions_Menu, NULL, "Plane Crasher", ID_PLANE_CRASHER, MENU_COLOR_DEFAULT, NULL, "Out-of-date.");
 	menu_item_add(OverLight_CarFunctions_Menu, NULL, "\tSync Settings", ID_NONE, MENU_COLOR_DEFAULT, NULL);
 	menu_item_add(OverLight_CarFunctions_Menu, NULL, "Normal Sync", ID_SYNC_INCAR_MENU, MENU_COLOR_DEFAULT, NULL, "Works better but is the most detectable.");
-	menu_item_add(OverLight_CarFunctions_Menu, NULL, "Secondary Sync", ID_SYNC_UNOCCUPIED_MENU, MENU_COLOR_DEFAULT, NULL, "Undetectable sync.");
-	menu_item_add(OverLight_CarFunctions_Menu, NULL, "Normal Sync + RPC", ID_SYNC_INCAR_RPC_MENU, MENU_COLOR_DEFAULT, NULL, "The same but a little undetectable");
+	menu_item_add(OverLight_CarFunctions_Menu, NULL, "Undetected Sync", ID_SYNC_UNOCCUPIED_MENU, MENU_COLOR_DEFAULT, NULL, "Undetectable sync.");
+	menu_item_add(OverLight_CarFunctions_Menu, NULL, "Sync with RPC", ID_SYNC_INCAR_RPC_MENU, MENU_COLOR_DEFAULT, NULL, "The same but a little undetectable");
 	menu_item_add(OverLight_CarFunctions_Menu, NULL, "\tSend Rate for Car Cheats", ID_NONE, MENU_COLOR_DEFAULT, NULL);
 	menu_item_add(OverLight_CarFunctions_Menu, NULL, "\aSend Rate: // ", ID_CAR_SEND_RATE, MENU_COLOR_DEFAULT, NULL, "Increase for get fast but more detectable");
 	menu_item_add(OverLight_CarFunctions_Menu, NULL, "\tFriends", ID_NONE, MENU_COLOR_DEFAULT, NULL);

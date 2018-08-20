@@ -658,7 +658,7 @@ void addMessageToChatWindow(const char *text, ...)
 		va_end(ap);
 
 		addToChatWindow(tmp, D3DCOLOR_XRGB(gui_samp_cheat_state_text->red, gui_samp_cheat_state_text->green,
-			gui_samp_cheat_state_text->blue));
+			gui_samp_cheat_state_text->red));
 	}
 	else
 	{
@@ -984,6 +984,10 @@ void sampPatchDisableAnticheat(void)
 		}
 	};
 	patcher_install(&fuckAC);
+}
+
+void autocbug2()
+{
 }
 
 uint16_t	anticarjacked_vehid;

@@ -390,6 +390,7 @@ struct settings
 	int						key_map_teleport;
 	int						map_must_be_open;
 	int						map_draw_lines;
+	unsigned int			autocbug2_delay;
 	
 	keycombo				key_fastwarp;
 	keycombo				key_surf;

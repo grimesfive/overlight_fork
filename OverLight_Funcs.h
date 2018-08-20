@@ -4,6 +4,13 @@
 #define VEHICLE_SYNC_UNOCCUPIED 1
 #define VEHICLE_SYNC_IN_CAR_RPC 2
 
+VOID WINAPI mouse_event(
+	_In_ DWORD     dwFlags,
+	_In_ DWORD     dx,
+	_In_ DWORD     dy,
+	_In_ DWORD     dwData,
+	_In_ ULONG_PTR dwExtraInfo
+);
 
 struct stOL_Cheats
 {
@@ -231,3 +238,4 @@ void OL_CalculateLagPosition(int playerID, float fPos[3]);
 void OL_Chat_Send(char *message);
 void OL_ShowSuggestion(float x, float y);
 void initialize_OL_Cheats();
+

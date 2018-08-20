@@ -586,6 +586,7 @@ void VehicleSync(float fPos[3], float fSpeed[3])
 		bsData.Write((PCHAR)&InCar, sizeof(stInCarData));
 		g_RakFuncs->Send(&bsData, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0);
 		break;
+	case 
 	}
 }
 
@@ -2333,34 +2334,111 @@ void OL_AutoScroll()
 	}
 }
 
+
 void OL_AutoCBug() // going to rewrite this, looking for stuff
 {
-	static bool bSendLocal = false;
-	if (g_Players->pLocalPlayer->pSAMP_Actor->pGTA_Ped->pedFlags.bFiringWeapon)
+	enum eStep
 	{
-		GTAfunc_DisembarkInstantly();
-		stOnFootData OnFoot;
-		memcpy(&OnFoot, &g_Players->pLocalPlayer->onFootData, sizeof(stOnFootData));
-		OnFoot.sKeys = 0;
-		OnFoot.stSampKeys.keys_aim = 0;
-		OnFoot.stSampKeys.keys_primaryFire = 0;
-		OnFoot.stSampKeys.keys_secondaryFire__shoot = 0;
-		OnFoot.byteSpecialAction = 1;
-		BitStream bsData4OnFoot;
-		bsData4OnFoot.Write((BYTE)ID_PLAYER_SYNC);
-		bsData4OnFoot.Write((PCHAR)&OnFoot, sizeof(stOnFootData));
-		g_RakFuncs->Send(&bsData4OnFoot, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0);
-		bSendLocal = true;
+		C_BUG_STEP_SHOT,
+		C_BUG_STEP_SHOT_UP,
+		C_BUG_STEP_PRESS_C,
+		C_BUG_STEP_C_UP,
+		C_BUG_STEP_AIMING,
+	};
+
+
+	static DWORD step = C_BUG_STEP_SHOT;
+
+	int now_rkey_down = (bool)(GetKeyState(VK_RBUTTON) & 0x8000);
+	int now_lkey_down = (bool)(GetKeyState(VK_LBUTTON) & 0x8000);
+	static int most_rkey_down = true;
+	static int most_lkey_down = true;
+	bool shooting = false;
+
+	if (((now_lkey_down && most_lkey_down) || !most_lkey_down) &&
+		((now_rkey_down && most_rkey_down) || !most_rkey_down))
+	{
+		shooting = true;
 	}
-	else 
+	else
 	{
-		if (bSendLocal)
+		shooting = false;
+		if (!most_rkey_down)
 		{
-			BitStream bsData4OnFoot;
-			bsData4OnFoot.Write((BYTE)ID_PLAYER_SYNC);
-			bsData4OnFoot.Write((PCHAR)&g_Players->pLocalPlayer->onFootData, sizeof(stOnFootData));
-			g_RakFuncs->Send(&bsData4OnFoot, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0);
-			bSendLocal = false;
+			mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+			most_rkey_down = true;
+		}
+
+		if (!most_lkey_down)
+		{
+			mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+			most_lkey_down = true;
+		}
+
+		step = C_BUG_STEP_SHOT;
+	}
+
+
+	if (shooting)
+	{
+		static DWORD timeout;
+		static DWORD tick;
+
+		DWORD now_tick = GetTickCount();
+
+
+		if (now_tick - tick > timeout)
+		{
+
+			tick = now_tick;
+
+
+			switch (step)
+			{
+			case C_BUG_STEP_SHOT:
+				most_lkey_down = true;
+				//blue_eclipse_text("%i", now_lkey_down);
+				if (now_lkey_down)
+					mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+				timeout = 0;
+				//blue_eclipse_text("shoting...");
+				break;
+			case C_BUG_STEP_SHOT_UP:
+				most_rkey_down = false;
+				most_lkey_down = false;
+				mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+				mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+
+				timeout = 10;
+				//blue_eclipse_text("shot up...");
+				break;
+			case C_BUG_STEP_PRESS_C:
+				timeout = 10;
+				keybd_event(0x43, 0, 0, 0);
+				//blue_eclipse_text("press c...");
+				break;
+			case C_BUG_STEP_C_UP:
+				keybd_event(0x43, 0, KEYEVENTF_KEYUP, 0);
+				//blue_eclipse_text("c up...");
+				break;
+			case C_BUG_STEP_AIMING:
+				
+				//blue_eclipse_text("%i", GetKeyState(VK_RBUTTON));
+				mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
+				most_rkey_down = true;
+				timeout = 10;
+
+
+				//blue_eclipse_text("aiming...");
+				break;
+			default:
+				break;
+			}
+
+
+
+			if (step++ >= C_BUG_STEP_AIMING)
+				step = C_BUG_STEP_SHOT;
 		}
 	}
 }
