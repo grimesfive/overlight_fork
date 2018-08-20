@@ -586,7 +586,6 @@ void VehicleSync(float fPos[3], float fSpeed[3])
 		bsData.Write((PCHAR)&InCar, sizeof(stInCarData));
 		g_RakFuncs->Send(&bsData, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0);
 		break;
-	case 
 	}
 }
 
