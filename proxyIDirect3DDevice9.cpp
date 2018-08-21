@@ -53,11 +53,6 @@ IDirect3DPixelShader9 *chams_behind_color;
 D3DXVECTOR3				speedoPos;
 D3DXVECTOR2				needlePos;
 
-//logo
-//D3DXVECTOR3				OL_LogoPos;
-IDirect3DTexture9		*tOL_LogoPNG;
-ID3DXSprite				*sOL_LogoPNG;
-
 
 //D3DXVECTOR3				LogoPos;
 /*
@@ -358,9 +353,6 @@ void RenderDebug(void)
 	x = 324;
 	y = 4;
 
-	/* blue box */
-	render->D3DBoxi(x - 2, y - 2, CHAR_WIDTH * 75 + 4, ROW_HEIGHT * 27 + 4, D3DCOLOR_ARGB(180, 0, 0, 150), NULL);
-
 	/* render selection */
 	for (row = offset16; row < offset16 + data_size[debug->data_type]; row++)
 	{
@@ -624,15 +616,6 @@ void RenderMenu(void)
 	top = MenuSettings.fMenuPos[1];
 
 	MenuSettings.iLogoHeight = 60 + 10;
-
-	D3DXMATRIX mat;
-	D3DXVECTOR2 vecOL_Logo = { (float)(left + (250 / 4)),
-		(float)(y - MenuSettings.iLogoHeight) };
-	D3DXMatrixTransformation2D(&mat, NULL, 0.0f, NULL, NULL, 0.0f, &vecOL_Logo);
-	sOL_LogoPNG->Begin(D3DXSPRITE_ALPHABLEND);
-	sOL_LogoPNG->SetTransform(&mat);
-	sOL_LogoPNG->Draw(tOL_LogoPNG, NULL, NULL, NULL, 0xFFFFFFFF);
-	sOL_LogoPNG->End();
 
 
 	render->D3DBox(left - 2, y, 2, MENU_HEIGHT, OL_COLOR2(255));
@@ -1508,7 +1491,7 @@ void NewRenderScoreList()
 		return;
 	//// Close SAMP Scoreboard, SAMP Chat and Textdraws
 	g_Scoreboard->iIsEnabled = 1;
-	g_Chat->iChatWindowMode = 0;
+	g_Chat->iChatWindowMode = 1;
 	//// Want updated data
 	updateScoreboardData();
 
@@ -1569,8 +1552,8 @@ void renderScoreList()
 		return;
 
 	//// Close SAMP Scoreboard, SAMP Chat and Textdraws
-	g_Scoreboard->iIsEnabled = 0;
-	g_Chat->iChatWindowMode = 0;
+	g_Scoreboard->iIsEnabled = 1;
+	g_Chat->iChatWindowMode = 1;
 	//memcpy_safe( (void *)(g_dwSAMP_Addr + SAMP_GAMEPROCESSHOOK), "\xEB", 1 );
 
 	//// Want updated data
@@ -3331,37 +3314,6 @@ void mapMenuTeleport(void)
 
 void texturesInitResources(IDirect3DDevice9 *pDevice, D3DPRESENT_PARAMETERS *pPresentationParameters)
 {
-	tOL_LogoPNG = NULL;
-	sOL_LogoPNG = NULL;
-
-	//Logo
-	if (!tOL_LogoPNG)
-	{
-		char filename[512];
-		snprintf(filename, sizeof(filename), "%s\\" M0D_FOLDER "OverLight_Logo.png", g_szWorkingDirectory);
-		D3DXCreateTextureFromFile(pDevice, filename, &tOL_LogoPNG);//Logo set
-	}
-	if (!sOL_LogoPNG)
-		D3DXCreateSprite(pDevice, &sOL_LogoPNG);
-
-	//Logo
-	//tLogoPNG = NULL;
-	//sLogoPNG = NULL;
-	//if (!tLogoPNG)
-	//	D3DXCreateTextureFromFile(pDevice, set.logo_png_filename, &tLogoPNG);//Logo set
-	//if (!sLogoPNG)
-	//	D3DXCreateSprite(pDevice, &sLogoPNG);
-
-	//Icon Settings
-	//tSettingsIconPNG = NULL;
-	//sSettingsIconPNG = NULL;
-
-	//if (!tSettingsIconPNG)
-	//	D3DXCreateTextureFromFile(pDevice, set.settings_png_filename, &tSettingsIconPNG);//Icon set
-	//if (!sSettingsIconPNG)
-	//	D3DXCreateSprite(pDevice, &sSettingsIconPNG);
-
-
 	if (set.speedometer_enable
 		&& (																   //if
 			fopen(set.speedometer_speedo_png_filename, "rb") == NULL	   //if
@@ -3431,8 +3383,6 @@ void proxyID3DDevice9_UnInitOurShit(void)
 	SAFE_RELEASE(chams_red);
 	SAFE_RELEASE(chams_behind);
 	SAFE_RELEASE(chams_infront);
-	SAFE_RELEASE(sOL_LogoPNG);
-	SAFE_RELEASE(tOL_LogoPNG);
 	//
 	//SAFE_RELEASE(sSettingsIconPNG);
 	//SAFE_RELEASE(tSettingsIconPNG);
@@ -3855,7 +3805,7 @@ void renderHandler()
 					else
 					{
 						uint32_t	bar_color = D3DCOLOR_ARGB(hud_bar->alpha, hud_bar->red, hud_bar->green,
-							hud_bar->blue);
+							hud_bar->green);
 						render->D3DBoxi((int)x - 1,
 							(int)(pPresentParam.BackBufferHeight - 1) - (int)pD3DFont_Footer->DrawHeight() - 3,
 							(int)(pPresentParam.BackBufferWidth + 14), 22, bar_color, NULL);
@@ -3883,10 +3833,6 @@ void renderHandler()
 					D3DXVECTOR2 vecOL_Logo = { ((float)pPresentParam.BackBufferWidth - 250.0f) / 2.0f,
 						(float)pPresentParam.BackBufferHeight / 2.0f - 60.0f - 10.0f };
 					D3DXMatrixTransformation2D(&mat, NULL, 0.0f, NULL, NULL, 0.0f, &vecOL_Logo);
-					sOL_LogoPNG->Begin(D3DXSPRITE_ALPHABLEND);
-					sOL_LogoPNG->SetTransform(&mat);
-					sOL_LogoPNG->Draw(tOL_LogoPNG, NULL, NULL, NULL, 0xFFFFFFFF);
-					sOL_LogoPNG->End();
 
 					float fWidth = 250.0f;
 					static float fProgress = 1;
@@ -3936,11 +3882,6 @@ void renderHandler()
 					D3DXMATRIX mat;
 					D3DXVECTOR2 vecOL_Logo = { ((float)pPresentParam.BackBufferWidth - 250.0f) / 2.0f,
 						(float)pPresentParam.BackBufferHeight / 2.0f - 60.0f - 10.0f };
-					D3DXMatrixTransformation2D(&mat, NULL, 0.0f, NULL, NULL, 0.0f, &vecOL_Logo);
-					sOL_LogoPNG->Begin(D3DXSPRITE_ALPHABLEND);
-					sOL_LogoPNG->SetTransform(&mat);
-					sOL_LogoPNG->Draw(tOL_LogoPNG, NULL, NULL, NULL, 0xFFFFFFFF);
-					sOL_LogoPNG->End();
 
 					float fWidth = 250.0f;
 
@@ -3953,7 +3894,7 @@ void renderHandler()
 
 				if (cheat_state->_generic.hp_cheat)
 				{
-					CheatName = "PorcoMode";
+					CheatName = "God";
 					ParWidth = pD3DFont_Footer->DrawLength(CheatName);
 					ParPosY = (float)(pPresentParam.BackBufferHeight) - ParHeight;
 					render->D3D_OL_Parallelogram(x + ParHeight, ParPosY, ParWidth + ParHeight, ParHeight, OL_COLOR1(200));
