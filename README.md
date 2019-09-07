@@ -1,5 +1,7 @@
 # m0d_sa | OverLight v3
 
+##### Updated version is on [GitLab](https://gitlab.com/RcKoid/mod-s0beit-overlight). 
+
 This is a direct fork of OverLight v3 source from UG-BASE. In the mean time, we will customize this s0beit for ourselves, so if you're looking for the direct source, use here instead: http://ugbase.eu/Thread-Mod-Sobeit-OverLight-v3-with-source-code
 
 Credits:
